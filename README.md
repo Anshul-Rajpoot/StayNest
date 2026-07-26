@@ -1,8 +1,8 @@
-# casaGo 🏡
+# StayNest
 
 Live Demo: https://casago-ggz1.onrender.com
 
-casaGo is a full-stack web application for discovering and sharing rental listings.  
+StayNest is a full-stack web application for discovering and sharing rental listings.  
 Users can browse listings, create accounts, add properties, upload images, and leave reviews.
 
 ---
