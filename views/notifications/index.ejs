@@ -1,0 +1,34 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-3">
+  <div class="col-8 offset-2">
+    <h3>Your Notifications</h3>
+
+    <% if (notifications.length === 0) { %>
+      <p class="text-muted">No notifications yet.</p>
+    <% } %>
+
+    <div class="list-group">
+      <% notifications.forEach((notification) => { %>
+        <div class="list-group-item <%= notification.read ? "" : "list-group-item-warning" %>">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+              <p class="mb-1"><%= notification.message %></p>
+              <% if (notification.sender) { %>
+                <small class="text-muted">From: <%= notification.sender.username %></small>
+              <% } %>
+              <% if (notification.listing) { %>
+                <small class="text-muted">Listing: <%= notification.listing.title %></small>
+              <% } %>
+            </div>
+            <% if (!notification.read) { %>
+              <form method="POST" action="/notifications/<%= notification._id %>/read">
+                <button class="btn btn-sm btn-outline-dark">Mark read</button>
+              </form>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>

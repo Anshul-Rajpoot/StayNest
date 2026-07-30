@@ -15,6 +15,32 @@ const listingSchema = new Schema({
     filename: String,
   },
   price: Number,
+  listingType: {
+    type: String,
+    enum: ["rent", "sell"],
+    default: "rent",
+  },
+  state: {
+    type: String,
+    default: "",
+  },
+  currentBid: {
+    type: Number,
+    default: 0,
+  },
+  bids: [
+    {
+      bidder: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+      amount: Number,
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
   location: String,
   country: String,
   reviews: [

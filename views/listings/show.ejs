@@ -141,14 +141,77 @@
 
       </p>
 
+      <p class="card-body"><b>Listing Type:</b> <%= listing.listingType || "rent" %></p>
+
+      <% if (listing.state) { %>
+      <p class="card-body"><b>State:</b> <%= listing.state %></p>
+      <% } %>
+
       <p class="card-body"><%= listing.description %></p>
 
       <p class="card-body">
-        &#8377; <%= listing.price.toLocaleString("en-IN") %>
+        <% if (listing.listingType === "sell") { %>
+          Base Price: &#8377; <%= listing.price.toLocaleString("en-IN") %>
+        <% } else { %>
+          &#8377; <%= listing.price.toLocaleString("en-IN") %> / night
+        <% } %>
       </p>
+
+      <% if (listing.listingType === "sell") { %>
+      <p class="card-body">
+        Current Highest Bid: &#8377; <%= (listing.currentBid || listing.price).toLocaleString("en-IN") %>
+      </p>
+      <% } %>
 
       <p class="card-body"><%= listing.location %></p>
       <p class="card-body"><%= listing.country %></p>
+
+      <% if (listing.listingType === "sell" && currUser && (!listing.owner || !listing.owner._id.equals(currUser._id))) { %>
+      <hr />
+      <h5>Place a Bid</h5>
+      <form method="POST" action="/listings/<%= listing._id %>/bids" class="row g-2">
+        <div class="col-md-8">
+          <input
+            type="number"
+            name="bid[amount]"
+            class="form-control"
+            min="<%= (listing.currentBid || listing.price) + 1 %>"
+            placeholder="Enter bid above the current price"
+            required
+          />
+        </div>
+        <div class="col-md-4">
+          <button class="btn btn-outline-dark w-100">Bid</button>
+        </div>
+      </form>
+      <% } %>
+
+      <% if (listing.listingType === "sell" && listing.bids.length > 0) { %>
+      <hr />
+      <h5>Bid History</h5>
+      <ul class="list-group">
+        <% listing.bids.slice().reverse().forEach((bid) => { %>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <div>@<%= bid.bidder ? bid.bidder.username : "Unknown" %></div>
+            <small class="text-muted">&#8377; <%= bid.amount.toLocaleString("en-IN") %></small>
+          </div>
+          <% if (currUser && listing.owner && listing.owner._id.equals(currUser._id) && bid.bidder) { %>
+          <form method="POST" action="/listings/<%= listing._id %>/bids/<%= bid.bidder._id %>/message" class="d-flex gap-2">
+            <input
+              type="text"
+              name="message"
+              class="form-control form-control-sm"
+              placeholder="Send message to bidder"
+              required
+            />
+            <button class="btn btn-sm btn-outline-dark">Send</button>
+          </form>
+          <% } %>
+        </li>
+        <% }) %>
+      </ul>
+      <% } %>
     </div>
   </div>
 </div>

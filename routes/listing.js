@@ -28,5 +28,8 @@ router.route("/:id/edit")
 .get(isLoggedIn,isOwner, wrapAsync(listingController.renderEditForm))
 .put(isLoggedIn, isOwner,upload.single('listing[image]'),wrapAsync(listingController.updateListing));
 
+router.post("/:id/bids", isLoggedIn, wrapAsync(listingController.createBid));
+router.post("/:id/bids/:bidderId/message", isLoggedIn, isOwner, wrapAsync(listingController.messageBidder));
+
 
 module.exports = router;

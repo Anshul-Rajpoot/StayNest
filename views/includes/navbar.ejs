@@ -53,6 +53,9 @@
       </div>
       <div class="navbar-nav ms-auto">
         <a class="nav-link" href="/listings/new"><b>Add New Listing</b></a>
+        <% if (currUser) { %>
+        <a class="nav-link" href="/notifications"><b>Notifications <% if (unreadNotificationCount > 0) { %>(<%= unreadNotificationCount %>)<% } %></b></a>
+        <% } %>
         <% if(!currUser){ %>
         <a class="nav-link" aria-current="page" href="/signup"
           ><b>Sign up</b></a

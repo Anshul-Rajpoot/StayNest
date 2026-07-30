@@ -28,6 +28,24 @@
         >
         <div class="invalid-feedback">Please enter short Description</div>
       </div>
+      <div class="row">
+        <div class="mb-3 col-md-6">
+          <label for="listingType" class="form-label">Listing Type</label>
+          <select name="listing[listingType]" class="form-select" required>
+            <option value="rent" <%= listing.listingType === "rent" ? "selected" : "" %>>Rent</option>
+            <option value="sell" <%= listing.listingType === "sell" ? "selected" : "" %>>Sell</option>
+          </select>
+        </div>
+        <div class="mb-3 col-md-6">
+          <label for="state" class="form-label">State</label>
+          <input
+            name="listing[state]"
+            value="<%=listing.state%>"
+            type="text"
+            class="form-control"
+          />
+        </div>
+      </div>
       <div class="mb-3">
         Original Listing Image <br />
         <img src="<%=originalImageUrl %>" class="m-100"/>
@@ -39,7 +57,7 @@
       </div>
       <div class="row">
         <div class="mb-3 col-md-4">
-          <label for="price" class="form-label">Price</label>
+          <label for="price" class="form-label">Base Price / Rent Price</label>
           <input
             name="listing[price]"
             value="<%=listing.price%>"

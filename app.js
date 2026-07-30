@@ -15,10 +15,12 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const Notification = require("./models/notification.js");
 
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const notificationRouter = require("./routes/notification.js");
 
 const dbUrl = process.env.ATLASDB_URL;
 
@@ -73,10 +75,20 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user;
+
+    if (req.user) {
+        res.locals.unreadNotificationCount = await Notification.countDocuments({
+            recipient: req.user._id,
+            read: false,
+        });
+    } else {
+        res.locals.unreadNotificationCount = 0;
+    }
+
     next();
 });
 
@@ -88,6 +100,7 @@ app.get("/", (req, res) => {
 /* ---------- ROUTERS ---------- */
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
+app.use("/notifications", notificationRouter);
 app.use("/", userRouter);
 
 /* ---------- 404 HANDLER ---------- */
